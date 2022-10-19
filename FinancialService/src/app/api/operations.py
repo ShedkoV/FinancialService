@@ -2,6 +2,7 @@ from fastapi import (
     Depends,
     APIRouter,
     Response,
+    HTTPException,
     status
 )
 from tables import User
@@ -42,7 +43,12 @@ def get_operation(
     user: User = Depends(get_current_user),
     service: OperationService = Depends(),
 ):
-    return service.get(user_id=user.id, operation_id=operation_id)
+    result = service.get(user_id=user.id, operation_id=operation_id)
+
+    if not result:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
+    return result
 
 
 @router.put('/{operation_id}', response_model=Operation)
@@ -52,11 +58,16 @@ def update_operation(
     user: User = Depends(get_current_user),
     service: OperationService = Depends(),
 ):
-    return service.update(
+    result = service.update(
         user_id=user.id, 
         operation_id=operation_id, 
         operation_data=operation_data
     )
+
+    if not result:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    
+    return result
 
 
 @router.delete('/{operation_id}')
@@ -65,5 +76,7 @@ def delete_operation(
     user: User = Depends(get_current_user),
     service: OperationService = Depends(),
 ):
-    service.delete(user_id=user.id, operation_id=operation_id)
+    if not service.delete(user_id=user.id, operation_id=operation_id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    
     return Response(status_code=status.HTTP_204_NO_CONTENT)
