@@ -1,7 +1,7 @@
 from typing import Optional
+from fastapi import Depends
 from database import get_session
 from sqlalchemy.orm import Session
-from fastapi import Depends, HTTPException, status
 from models.operations import OperationKind, OperationCreate, OperationUpdate
 
 import tables
@@ -25,7 +25,7 @@ class OperationService:
         return operations
 
     def _get(self, user_id: int, operation_id: int) -> tables.Operation:
-        operation = (
+        return (
             self.session
             .query(tables.Operation)
             .filter_by(
@@ -34,11 +34,6 @@ class OperationService:
             )
             .first()
         )
-        
-        if not operation:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-        
-        return operation        
 
     def get_list(self, user_id: int, kind: Optional[OperationKind] = None) -> list[tables.Operation]:
         query = (
@@ -67,7 +62,6 @@ class OperationService:
         
         return operations 
 
-
     def create(self, user_id: int, creation_data: OperationCreate) -> tables.Operation:
         operation = tables.Operation(
             **creation_data.dict(),
@@ -80,13 +74,18 @@ class OperationService:
 
     def update(self, user_id: int, operation_id: int, operation_data: OperationUpdate) -> tables.Operation:
         operation = self._get(user_id, operation_id)
-        for field, value in operation_data:
-            setattr(operation, field, value)
-        self.session.commit()
+        if operation:
+            for field, value in operation_data:
+                setattr(operation, field, value)
+            self.session.commit()
         
         return operation
 
     def delete(self, user_id: int, operation_id: int):
         operation = self._get(user_id, operation_id)
-        self.session.delete(operation)
-        self.session.commit()
+        if operation:
+            self.session.delete(operation)
+            self.session.commit()
+            operation = True
+
+        return operation
