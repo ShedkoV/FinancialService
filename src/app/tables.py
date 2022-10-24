@@ -14,7 +14,7 @@ from sqlalchemy.orm import relationship
 Base = declarative_base()
 
 
-class User(Base):
+class User(Base):# pylint: disable=too-few-public-methods
     """User table"""
     __tablename__ = 'users'
 
@@ -24,7 +24,7 @@ class User(Base):
     password_hash = Column(String)
 
 
-class Operation(Base):
+class Operation(Base):# pylint: disable=too-few-public-methods
     """Operation table"""
     __tablename__ = 'operations'
 

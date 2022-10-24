@@ -3,7 +3,7 @@ import os
 from pydantic import BaseSettings
 
 
-class Settings(BaseSettings):
+class Settings(BaseSettings):# pylint: disable=too-few-public-methods
     """Set settings vars"""
     server_host: str = "127.0.0.1"
     server_port: int = 8000
@@ -17,7 +17,8 @@ class Settings(BaseSettings):
     jwt_algorithm: str = 'HS256'
     jwt_expiration: int = 1 * 60 * 60
 
-    class Config:
+    class Config:# pylint: disable=too-few-public-methods
+        """orm_mode on"""
         orm_mode = True
 
 

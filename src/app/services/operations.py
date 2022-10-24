@@ -1,9 +1,9 @@
 """Business logic for operations"""
 from typing import Optional
 from fastapi import Depends
-from database import get_session
+from ..database import get_session
 from sqlalchemy.orm import Session
-from models.operations import OperationKind, OperationCreate, OperationUpdate
+from ..models.operations import OperationKind, OperationCreate, OperationUpdate
 
 import tables
 
@@ -39,7 +39,10 @@ class OperationService:
             .first()
         )
 
-    def get_list(self, user_id: int, kind: Optional[OperationKind] = None) -> list[tables.Operation]:
+    def get_list(
+        self, 
+        user_id: int, 
+        kind: Optional[OperationKind] = None) -> list[tables.Operation]:
         """get all operations"""
         query = (
             self.session
@@ -48,14 +51,17 @@ class OperationService:
         )
         if kind:
             query = query.filter_by(kind=kind)
-        
+
         return query.all()
 
     def get(self, user_id: int, operation_id: int) -> tables.Operation:
         """get operation"""
         return self._get(user_id, operation_id)
 
-    def create_many(self, user_id: int, operations_data: list[OperationCreate]) -> list[tables.Operation]:
+    def create_many(
+        self, 
+        user_id: int, 
+        operations_data: list[OperationCreate]) -> list[tables.Operation]:
         """Creation operations report"""
         operations = [
             tables.Operation(
@@ -66,8 +72,8 @@ class OperationService:
         ]
         self.session.add_all(operations)
         self.session.commit()
-        
-        return operations 
+
+        return operations
 
     def create(self, user_id: int, creation_data: OperationCreate) -> tables.Operation:
         """Creation operation"""
@@ -77,17 +83,21 @@ class OperationService:
         )
         self.session.add(operation)
         self.session.commit()
-        
+
         return operation
 
-    def update(self, user_id: int, operation_id: int, operation_data: OperationUpdate) -> tables.Operation:
+    def update(
+        self, 
+        user_id: int, 
+        operation_id: int, 
+        operation_data: OperationUpdate) -> tables.Operation:
         """Edit operations"""
         operation = self._get(user_id, operation_id)
         if operation:
             for field, value in operation_data:
                 setattr(operation, field, value)
             self.session.commit()
-        
+
         return operation
 
     def delete(self, user_id: int, operation_id: int):

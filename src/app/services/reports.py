@@ -8,8 +8,8 @@ from typing import (
 
 from fastapi import Depends
 
-from services.operations import OperationService
-from models.operations import OperationCreate, Operation
+from ..services.operations import OperationService
+from ..models.operations import OperationCreate, Operation
 
 
 class ReportsService:

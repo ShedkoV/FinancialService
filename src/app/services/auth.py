@@ -8,13 +8,13 @@ from fastapi import (
     HTTPException,
     status,
 )
-from settings import settings
 from jose import jwt, JWTError
+from ..settings import settings
 from passlib.hash import bcrypt
-from database import get_session
+from ..database import get_session
 from sqlalchemy.orm import Session
 from pydantic import ValidationError
-from models.auth import User, Token, UserCreate
+from ..models.auth import User, Token, UserCreate
 from fastapi.security import OAuth2PasswordBearer
 
 import tables
@@ -39,7 +39,7 @@ class AuthService:
     def hash_password(cls, password: str) -> str:
         """Get password hash"""
         return bcrypt.hash(password)
-    
+
     @classmethod
     def verify_token(cls, token: str) -> User:
         """Validate token"""
@@ -57,7 +57,7 @@ class AuthService:
             )
         except JWTError:
             raise exception from None
-        
+
         user_data = payload.get('user')
 
         try:
@@ -71,7 +71,7 @@ class AuthService:
     def create_token(cls, user: tables.User) -> Token:
         """Create token"""
         user_data = User.from_orm(user)
-        
+
         now = datetime.utcnow()
         payload = {
             'iat': now,
@@ -91,7 +91,7 @@ class AuthService:
 
     def __init__(self, session: Session = Depends(get_session)) -> None:
         self.session = session
-    
+
     def register_new_user(self, user_data: UserCreate) -> Token:
         """Register new user"""
         user = tables.User(
@@ -123,5 +123,5 @@ class AuthService:
 
         if not self.verify_password(password, user.password_hash):
             raise exception
-        
+
         return self.create_token(user)
