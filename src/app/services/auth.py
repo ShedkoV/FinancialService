@@ -8,11 +8,11 @@ from fastapi import (
     HTTPException,
     status,
 )
+from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from passlib.hash import bcrypt
 from sqlalchemy.orm import Session
 from pydantic import ValidationError
-from fastapi.security import OAuth2PasswordBearer
 from ..settings import settings
 from ..database import get_session
 from ..tables import User as table_user
