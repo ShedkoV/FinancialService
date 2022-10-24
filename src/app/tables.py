@@ -1,3 +1,4 @@
+"""Tables description"""
 from sqlalchemy import (
     Column,
     Date,
@@ -14,6 +15,7 @@ Base = declarative_base()
 
 
 class User(Base):
+    """User table"""
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
@@ -23,6 +25,7 @@ class User(Base):
 
 
 class Operation(Base):
+    """Operation table"""
     __tablename__ = 'operations'
 
     id = Column(Integer, primary_key=True)

@@ -1,5 +1,6 @@
+"""FastAPI application"""
 from fastapi import FastAPI
-from api import router
+from .api import router
 
 
 app = FastAPI()

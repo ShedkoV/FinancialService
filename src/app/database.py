@@ -1,4 +1,5 @@
-from settings import settings
+"""Database settings"""
+from .settings import settings
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -14,8 +15,9 @@ Session = sessionmaker(
 
 
 def get_session() -> Session:
+    """get session"""
     session = Session()
     try:
         yield session
     finally:
-        session.close() 
+        session.close()

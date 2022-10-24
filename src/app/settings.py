@@ -1,8 +1,10 @@
+"""All settings"""
 import os
 from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
+    """Set settings vars"""
     server_host: str = "127.0.0.1"
     server_port: int = 8000
 
