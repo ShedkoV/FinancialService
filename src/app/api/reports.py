@@ -40,9 +40,9 @@ def export_csv(
 ):
     """export file with operations"""
     report = report_service.export_csv(user_id=user.id)
-    
+
     return StreamingResponse(
         report,
         media_type='text/csv',
         headers={'Content-Disposition': 'attachment; filename=report.csv'},
-    ) 
+    )

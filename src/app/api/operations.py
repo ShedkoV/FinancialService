@@ -7,7 +7,7 @@ from fastapi import (
     HTTPException,
     status
 )
-from tables import User
+from ..tables import User
 from ..services.auth import get_current_user
 from ..services.operations import OperationService
 from ..models.operations import Operation, OperationKind, OperationCreate, OperationUpdate
@@ -64,14 +64,14 @@ def update_operation(
 ):
     """Edit operation by id"""
     result = service.update(
-        user_id=user.id, 
-        operation_id=operation_id, 
+        user_id=user.id,
+        operation_id=operation_id,
         operation_data=operation_data
     )
 
     if not result:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    
+
     return result
 
 
@@ -84,5 +84,5 @@ def delete_operation(
     """Delete operation by id"""
     if not service.delete(user_id=user.id, operation_id=operation_id):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    
+
     return Response(status_code=status.HTTP_204_NO_CONTENT)
