@@ -15,9 +15,8 @@ from pydantic import ValidationError
 from fastapi.security import OAuth2PasswordBearer
 from ..settings import settings
 from ..database import get_session
+from ..tables import User as table_user
 from ..models.auth import User, Token, UserCreate
-
-import tables
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/auth/sign-in')
@@ -68,7 +67,7 @@ class AuthService:
         return user
 
     @classmethod
-    def create_token(cls, user: tables.User) -> Token:
+    def create_token(cls, user: table_user) -> Token:
         """Create token"""
         user_data = User.from_orm(user)
 
@@ -94,7 +93,7 @@ class AuthService:
 
     def register_new_user(self, user_data: UserCreate) -> Token:
         """Register new user"""
-        user = tables.User(
+        user = table_user(
             email=user_data.email,
             username=user_data.username,
             password_hash=self.hash_password(user_data.password),
@@ -113,8 +112,8 @@ class AuthService:
 
         user = (
             self.session
-            .query(tables.User)
-            .filter(tables.User.username == username)
+            .query(table_user)
+            .filter(table_user.username == username)
             .first()
         )
 

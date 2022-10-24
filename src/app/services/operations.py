@@ -3,9 +3,8 @@ from typing import Optional
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from ..database import get_session
+from ..tables import Operation as table_operation
 from ..models.operations import OperationKind, OperationCreate, OperationUpdate
-
-import tables
 
 
 class OperationService:
@@ -13,25 +12,25 @@ class OperationService:
     def __init__(self, session: Session = Depends(get_session)) -> None:
         self.session = session
 
-    def get_many(self, user_id: int) -> list[tables.Operation]:
+    def get_many(self, user_id: int) -> list[table_operation]:
         """get all operations by user"""
         operations = (
             self.session
-            .query(tables.Operation)
-            .filter(tables.Operation.user_id == user_id)
+            .query(table_operation)
+            .filter(table_operation.user_id == user_id)
             .order_by(
-                tables.Operation.date.desc(),
-                tables.Operation.id.desc(),
+                table_operation.date.desc(),
+                table_operation.id.desc(),
             )
             .all()
         )
         return operations
 
-    def _get(self, user_id: int, operation_id: int) -> tables.Operation:
+    def _get(self, user_id: int, operation_id: int) -> table_operation:
         """get operation by id"""
         return (
             self.session
-            .query(tables.Operation)
+            .query(table_operation)
             .filter_by(
                 id=operation_id,
                 user_id=user_id,
@@ -42,11 +41,11 @@ class OperationService:
     def get_list(
         self,
         user_id: int,
-        kind: Optional[OperationKind] = None) -> list[tables.Operation]:
+        kind: Optional[OperationKind] = None) -> list[table_operation]:
         """get all operations"""
         query = (
             self.session
-            .query(tables.Operation)
+            .query(table_operation)
             .filter_by(user_id=user_id)
         )
         if kind:
@@ -54,17 +53,17 @@ class OperationService:
 
         return query.all()
 
-    def get(self, user_id: int, operation_id: int) -> tables.Operation:
+    def get(self, user_id: int, operation_id: int) -> table_operation:
         """get operation"""
         return self._get(user_id, operation_id)
 
     def create_many(
         self,
         user_id: int,
-        operations_data: list[OperationCreate]) -> list[tables.Operation]:
+        operations_data: list[OperationCreate]) -> list[table_operation]:
         """Creation operations report"""
         operations = [
-            tables.Operation(
+            table_operation(
                 **operation_data.dict(),
                 user_id=user_id,
             )
@@ -75,9 +74,9 @@ class OperationService:
 
         return operations
 
-    def create(self, user_id: int, creation_data: OperationCreate) -> tables.Operation:
+    def create(self, user_id: int, creation_data: OperationCreate) -> table_operation:
         """Creation operation"""
-        operation = tables.Operation(
+        operation = table_operation(
             **creation_data.dict(),
             user_id=user_id,
         )
@@ -90,7 +89,7 @@ class OperationService:
         self,
         user_id: int,
         operation_id: int,
-        operation_data: OperationUpdate) -> tables.Operation:
+        operation_data: OperationUpdate) -> table_operation:
         """Edit operations"""
         operation = self._get(user_id, operation_id)
         if operation:
