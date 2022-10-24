@@ -1,3 +1,4 @@
+"""Business logic for users"""
 from datetime import (
     datetime,
     timedelta,
@@ -23,20 +24,25 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/auth/sign-in')
 
 
 def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
+    """Get current user"""
     return AuthService.verify_token(token)
 
 
 class AuthService:
+    """Autorization user"""
     @classmethod
     def verify_password(cls, plain_password: str, hashed_password: str) -> bool:
+        """Verify password"""
         return bcrypt.verify(plain_password, hashed_password)
 
     @classmethod
     def hash_password(cls, password: str) -> str:
+        """Get password hash"""
         return bcrypt.hash(password)
     
     @classmethod
     def verify_token(cls, token: str) -> User:
+        """Validate token"""
         exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='Could not validate credentials',
@@ -63,6 +69,7 @@ class AuthService:
 
     @classmethod
     def create_token(cls, user: tables.User) -> Token:
+        """Create token"""
         user_data = User.from_orm(user)
         
         now = datetime.utcnow()
@@ -86,7 +93,7 @@ class AuthService:
         self.session = session
     
     def register_new_user(self, user_data: UserCreate) -> Token:
-
+        """Register new user"""
         user = tables.User(
             email=user_data.email,
             username=user_data.username,
@@ -97,6 +104,7 @@ class AuthService:
         return self.create_token(user)
 
     def authenticate_user(self, username: str, password: str) -> Token:
+        """Authenticate user"""
         exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='Incorrect username or password',

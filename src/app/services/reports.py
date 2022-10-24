@@ -1,3 +1,4 @@
+"""Business logic for reports"""
 import csv
 from io import StringIO
 from typing import (
@@ -12,6 +13,7 @@ from models.operations import OperationCreate, Operation
 
 
 class ReportsService:
+    """Reports Service"""
     report_fields = [
         'date',
         'kind',
@@ -23,6 +25,7 @@ class ReportsService:
         self.operations_service = operations_service
 
     def import_csv(self, user_id: int, file: BinaryIO):
+        """Uploud file operations"""
         reader = csv.DictReader(
             (line.decode() for line in file),
             fieldnames=self.report_fields,
@@ -41,6 +44,7 @@ class ReportsService:
         )
 
     def export_csv(self, user_id: int) -> TextIO:
+        """Download file operations"""
         output = StringIO()
         writer = csv.DictWriter(
             output,
