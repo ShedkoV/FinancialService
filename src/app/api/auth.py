@@ -1,12 +1,8 @@
 """Api urls and views for users"""
-from fastapi import (
-    Depends,
-    APIRouter,
-    status
-)
-from models.auth import UserCreate, Token, User
+from fastapi import Depends, APIRouter, status
+from ..auth import UserCreate, Token, User
 from fastapi.security import OAuth2PasswordRequestForm
-from services.auth import AuthService, get_current_user
+from ..auth import AuthService, get_current_user
 
 
 router = APIRouter(
