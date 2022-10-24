@@ -4,7 +4,7 @@ from decimal import Decimal
 from enum import Enum
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel# pylint: disable=no-name-in-module
 
 
 class OperationKind(str, Enum):# pylint: disable=too-few-public-methods
@@ -23,12 +23,10 @@ class BaseOperation(BaseModel):# pylint: disable=too-few-public-methods
 
 class OperationCreate(BaseOperation):# pylint: disable=too-few-public-methods
     """Operation Create Model"""
-    pass
 
 
 class OperationUpdate(BaseOperation):# pylint: disable=too-few-public-methods
     """Operation Update Model"""
-    pass
 
 
 class Operation(BaseOperation):# pylint: disable=too-few-public-methods

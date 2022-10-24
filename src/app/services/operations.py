@@ -1,8 +1,8 @@
 """Business logic for operations"""
 from typing import Optional
 from fastapi import Depends
-from ..database import get_session
 from sqlalchemy.orm import Session
+from ..database import get_session
 from ..models.operations import OperationKind, OperationCreate, OperationUpdate
 
 import tables
@@ -40,8 +40,8 @@ class OperationService:
         )
 
     def get_list(
-        self, 
-        user_id: int, 
+        self,
+        user_id: int,
         kind: Optional[OperationKind] = None) -> list[tables.Operation]:
         """get all operations"""
         query = (
@@ -59,8 +59,8 @@ class OperationService:
         return self._get(user_id, operation_id)
 
     def create_many(
-        self, 
-        user_id: int, 
+        self,
+        user_id: int,
         operations_data: list[OperationCreate]) -> list[tables.Operation]:
         """Creation operations report"""
         operations = [
@@ -87,9 +87,9 @@ class OperationService:
         return operation
 
     def update(
-        self, 
-        user_id: int, 
-        operation_id: int, 
+        self,
+        user_id: int,
+        operation_id: int,
         operation_data: OperationUpdate) -> tables.Operation:
         """Edit operations"""
         operation = self._get(user_id, operation_id)

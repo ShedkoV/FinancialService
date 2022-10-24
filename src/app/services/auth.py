@@ -9,13 +9,13 @@ from fastapi import (
     status,
 )
 from jose import jwt, JWTError
-from ..settings import settings
 from passlib.hash import bcrypt
-from ..database import get_session
 from sqlalchemy.orm import Session
 from pydantic import ValidationError
-from ..models.auth import User, Token, UserCreate
 from fastapi.security import OAuth2PasswordBearer
+from ..settings import settings
+from ..database import get_session
+from ..models.auth import User, Token, UserCreate
 
 import tables
 
