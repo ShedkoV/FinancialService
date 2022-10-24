@@ -1,3 +1,4 @@
+"""Api urls and views for users"""
 from fastapi import (
     Depends,
     APIRouter,
@@ -23,6 +24,7 @@ def sign_up(
     user_data: UserCreate,
     auth_service: AuthService = Depends(),
 ):
+    """Registration"""
     return auth_service.register_new_user(user_data)
 
 
@@ -34,6 +36,7 @@ def sign_in(
     auth_data: OAuth2PasswordRequestForm = Depends(),
     auth_service: AuthService = Depends(),
 ):
+    """Autorization"""
     return auth_service.authenticate_user(
         auth_data.username,
         auth_data.password,
@@ -45,4 +48,5 @@ def sign_in(
     response_model=User,
 )
 def get_user(user: User = Depends(get_current_user)):
+    """Getting one user"""
     return user
