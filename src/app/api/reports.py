@@ -1,3 +1,4 @@
+"""Api urls and views for reports operations"""
 from fastapi import (
     Depends,
     BackgroundTasks,
@@ -5,10 +6,10 @@ from fastapi import (
     File,
     UploadFile,
 )
-from models.auth import User
-from services.auth import get_current_user
-from services.reports import ReportsService
 from fastapi.responses import StreamingResponse
+from ..models.auth import User
+from ..services.auth import get_current_user
+from ..services.reports import ReportsService
 
 
 router = APIRouter(
@@ -24,6 +25,7 @@ def import_csv(
     user: User = Depends(get_current_user),
     report_service: ReportsService = Depends(),
 ):
+    """import file with operations"""
     background_tasks.add_task(
         report_service.import_csv,
         user.id,
@@ -36,6 +38,7 @@ def export_csv(
     user: User = Depends(get_current_user),
     report_service: ReportsService = Depends(),
 ):
+    """export file with operations"""
     report = report_service.export_csv(user_id=user.id)
     
     return StreamingResponse(
