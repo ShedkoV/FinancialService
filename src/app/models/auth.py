@@ -1,5 +1,5 @@
 """Models for user"""
-from pydantic import BaseModel
+from pydantic import BaseModel# pylint: disable=no-name-in-module
 
 
 class BaseUser(BaseModel):# pylint: disable=too-few-public-methods
